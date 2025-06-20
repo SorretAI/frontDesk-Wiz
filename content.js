@@ -8,8 +8,17 @@ const rules = {
 };
 
 function getProspectsTable() {
-  // Adjust the selector to your table
-  return document.querySelector('table');
+  // Try known ID or class first for stability
+  let table = document.querySelector('#prospects, .prospects-table');
+  if (table) return table;
+
+  // Fallback: search for a table that has distinctive headers
+  return Array.from(document.querySelectorAll('table')).find(t => {
+    const headers = Array.from(t.querySelectorAll('th')).map(th =>
+      th.textContent.trim()
+    );
+    return headers.includes('Names') && headers.includes('Days in Status');
+  }) || null;
 }
 
 function scanProspects() {
